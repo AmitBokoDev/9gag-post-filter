@@ -4,27 +4,27 @@
 		<link rel="stylesheet" href="assets/css/index.css">
 	</head>
 	<body>
-	 <div id="notify-wrapper">
-		<div id="notify-header">
-			<h1>Notify!</h1>
+	 <div id="popup-wrapper">
+		<div id="popup-header">
+			<h1>9GAG post filter test</h1>
 		</div>
-		<div id="notify-containers">
-			<div class="notify-form">
-				<label for="text">Notification</label>
-				<textarea name="text" id="notify-text" placeholder="Let's notify!"></textarea>
-			</div>
-			<div class=notify-buttons>
-				<p>Total: <span id="notify-count"></span></p>
-
-				<button class="button" id="notify-reset">
-					Reset
-				</button>
-				<button class="button primary" id="notify-button">
-					Notify!
-				</button>
+		<div id="popup-containers">
+			<div class="popup-form">
+				<label for="days">Display days next to username</label>
+				<input type="checkbox" name="days" id="days_checkbox"  checked="checked">
+				</br>
+				<label for="min_days">Minimum account age</label>
+				<input type="number" name="min_days" id="days_input" placeholder="300" value="300">
+				</br>
+				<label for="anon">Hide anonymous 9GAGGER</label>
+				<input type="checkbox" name="anon" id="anon_checkbox"  checked="checked">
+				</br>
+				<label for="verified">Hide verified accounts</label>
+				<input type="checkbox" name="verified" id="verified_checkbox"  checked="checked">
 			</div>
 		</div>
 	 </div>
+	 <script src="assets/js/jquery_slim_mini.js"></script>
 	 <script src="assets/js/index.js"></script>
 	</body>
 </html>

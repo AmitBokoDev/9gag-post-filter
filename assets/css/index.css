@@ -2,11 +2,11 @@ body {
     width: 250px;
 }
 
-#notify-wrapper {
+#popup-wrapper {
     padding: 5px;
 }
 
-#notify-header h1 {
+#popup-header h1 {
     font-size: 12px;
     margin: 0;
     margin-bottom: 10px;
@@ -34,7 +34,7 @@ body {
     margin: 10px 0 5px 10px;
 }
 
-.notify-buttons {
+.popup-buttons {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -66,6 +66,6 @@ textarea {
     margin-top: 5px;
 }
 
-.notify-buttons p {
+.popup-buttons p {
     margin: 10px 0 5px 10px;
 }
