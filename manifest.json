@@ -8,5 +8,10 @@
 	],
 	"action": {
 	  "default_popup": "index.html"
-	}
+	},	
+	"content_scripts": [{
+		"css": ["content.css"],
+		"js": ["jquery_slim_mini.js","content.js"],
+		"matches": ["https://blog.lateral.io/*"]
+	  }]
 }
