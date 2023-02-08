@@ -4,6 +4,7 @@
 Recently it has become apparant that 9gag is plagued by bots and spammers, so I created this simple extention to remove them from our feeds.\
 This extention doesn't block any account but simply hides the posts.
 
+[Download on the Chrome webstore](https://chrome.google.com/webstore/detail/9gag-post-filter/ajkipkkhchaaccpbpkclolpebkgbmodl)
 
 
 
