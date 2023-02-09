@@ -1,7 +1,9 @@
 var settings;
-
-chrome.storage.local.get( ['show_days',"min_days","anon","verified"], data => {
+var $tags
+chrome.storage.local.get( ['show_days',"min_days","anon","verified","promoted","tags","title"], data => {
   settings = data;
+  $tags = settings.tags;
+  $tags = $tags.trim().split(",");
 } ); 
 
 const myTimeout = setTimeout(function(){
@@ -13,18 +15,44 @@ const myTimeout = setTimeout(function(){
         $(this).children("article").each(function(){
           if($(this).hasClass("filtered"))
             return;
-          console.log($(this).attr("id")+" is unfiltered")
+          console.log($(this), $(this).attr("id")+" is unfiltered")
+
           let art_id = $(this).attr("id");
           let name = $("#"+art_id+" .ui-post-creator__author").text();
+          let title = $("#"+art_id+" header a h2").text();
+          let post_tags = [];
+          $("#"+art_id+" div.ui-post-tags").children().each(function(){
+            post_tags.push($(this).text());
+          });
+          console.log("post tags", post_tags);
+          console.log("global tags", $tags);
+
 
           if(
             (name == "9GAGGER" && settings.anon) || //hide anons
-            ( document.querySelectorAll("#"+art_id+" .ui-post-creator__badge").length > 0 && settings.verified) // hide verified
+            ( document.querySelectorAll("#"+art_id+" .ui-post-creator__badge").length > 0 && settings.verified) || // hide verified
+            ($(this).attr("id") === undefined && settings.promoted) // hide promoted
           ){
             console.log("need to hide "+name);
-            $("#"+art_id).remove();
+            $(this).remove();
             return;
           }
+
+          for(let i = 0; i<$tags.length; i++){ //hide tags
+            let tag = $tags[i];
+            console.log("tag ", tag);
+            console.log("in post> ", post_tags.includes(tag));
+            if(
+              (settings.title && title.toLowerCase().indexOf(tag.trim().toLowerCase()) > -1) || //search by title
+              (post_tags.includes(tag)) //search by post tags
+            ){
+              $("#"+art_id).remove();
+              return;
+            }
+
+          }
+
+          //keep days stuff for last, no unnecessary http requests
           if((settings.show_days || settings.min_days > 0) && name != "9GAGGER"){
             console.log("GETting...");
             $.get(
