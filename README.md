@@ -14,13 +14,14 @@ This extention doesn't block any account but simply hides the posts.
 - Hide users with less than X amount of days
 - Hide anonymous 9GAGGER posts
 - Hide users with blue chackmarks
+- Hide posts by tags or words in the title
 
 
 ## Soon (maybe idk)
 
 - Firefox support
 - Dark mode
-- More filters
+- nice UI
 
 
 ## Feedback
