@@ -1,6 +1,6 @@
 {
 	"name": "9gag post filter",
-	"description": "A Google Chrome extension!",
+	"description": "A post filter for 9GAG.com",
 	"version": "1.1",
 	"manifest_version": 3,
 	"permissions": [
