@@ -1,9 +1,11 @@
 var settings;
-var $tags
+var $tags = [];
 chrome.storage.local.get( ['show_days',"min_days","anon","verified","promoted","tags","title"], data => {
   settings = data;
-  $tags = settings.tags;
-  $tags = $tags.trim().split(",");
+  if(settings.tags !== undefined){
+    $tags = settings.tags;
+    $tags = $tags.trim().split(",");
+  }
 } ); 
 
 const myTimeout = setTimeout(function(){
