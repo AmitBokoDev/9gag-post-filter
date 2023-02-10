@@ -4,7 +4,10 @@
 Recently it has become apparant that 9gag is plagued by bots and spammers, so I created this simple extention to remove them from our feeds.\
 This extention doesn't block any account but simply hides the posts.
 
-[Download on the Chrome webstore](https://chrome.google.com/webstore/detail/9gag-post-filter/ajkipkkhchaaccpbpkclolpebkgbmodl)
+[Download on the Chrome webstore](https://chrome.google.com/webstore/detail/9gag-post-filter/ajkipkkhchaaccpbpkclolpebkgbmodl)\
+[Download on the Firefox addons website](https://addons.mozilla.org/en-US/firefox/addon/9gag-post-filter/)*\
+\
+*If the link isn't working, the addon isn't approved yet [10/02/2023 21:50 CET]
 
 
 
@@ -19,7 +22,7 @@ This extention doesn't block any account but simply hides the posts.
 - Firefox support** 
  
 *new version is awaiting review  [10/02/2023 21:50 CET]\
-**Firefox addon still awaiting reviw [10/02/2023 21:50 CET]
+**Firefox addon still awaiting review [10/02/2023 21:50 CET]
 
 
 ## Soon (maybe idk)
