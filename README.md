@@ -13,7 +13,7 @@ This extention doesn't block any account but simply hides the posts.
 - Show days next to the username on every post
 - Hide users with less than X amount of days
 - Hide anonymous 9GAGGER posts
-- Hide users with blue chackmarks
+- Hide users with blue checkmarks
 - Hide posts by tags or words in the title
 
 
