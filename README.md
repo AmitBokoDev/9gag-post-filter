@@ -17,11 +17,11 @@ This extention doesn't block any account but simply hides the posts.
 - Hide users with less than X amount of days
 - Hide anonymous 9GAGGER posts
 - Hide users with blue checkmarks
-- Hide 'Promoted' posts*
-- Hide posts by tags or words in the title*
+- Hide 'Promoted' posts
+- Hide posts by tags or words in the title
 - Firefox support** 
  
-*new version is awaiting review  [10/02/2023 21:50 CET]\
+
 **Firefox addon still awaiting review [10/02/2023 21:50 CET]
 
 
