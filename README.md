@@ -17,20 +17,24 @@ This extention doesn't block any account but simply hides the posts.
 - Hide users with less than X amount of days
 - Hide anonymous 9GAGGER posts
 - Hide users with blue checkmarks
-- Hide 'Promoted' posts*
-- Hide posts by tags or words in the title*
+- Hide 'Promoted' posts
+- Hide posts by tags or words in the title
 - Firefox support** 
  
-*new version is awaiting review  [10/02/2023 21:50 CET]\
+
 **Firefox addon still awaiting review [10/02/2023 21:50 CET]
 
 
 ## Soon (maybe idk)
 - Mobile support***
+- sus accounts list****
 - Dark mode
 - nice UI
 
-***Firefox mobile supports browser addons, waiting to see if I could register it as a mobile compatible addon
+***Firefox mobile supports browser addons, waiting to see if I could register it as a mobile compatible addon\
+\
+**** with every accout age check, the code also pulls basic info about the last 10 posts that were posted by the user,\
+     by checking if the user posts too frequently, we could mark that user as a possible bot or spammer.
 
 
 ## Feedback
