@@ -42,7 +42,8 @@ const myTimeout = setTimeout(function(){
           ($("#"+art_id+" .ui-post-creator__author").hasClass("promoted") && settings.promoted) // hide promoted
         ){
           console.log("need to hide "+name);
-          $(this).remove();
+          $(this).hide();
+          $(this).addClass("filtered");
           return;
         }
 
@@ -54,7 +55,8 @@ const myTimeout = setTimeout(function(){
             (settings.title && title.toLowerCase().indexOf(tag.trim().toLowerCase()) > -1) || //search by title
             (post_tags.includes(tag)) //search by post tags
           ){
-            $("#"+art_id).remove();
+            $("#"+art_id).hide();
+            $(this).addClass("filtered");
             return;
           }
 
@@ -66,27 +68,27 @@ const myTimeout = setTimeout(function(){
           $.get(
             "https://9gag.com/u/"+name,
             function(res){
-              // console.log(res);
-            res = res.substr(res.indexOf("creator"));
-            res = res.substr(res.indexOf("creationTs")+13, 10);
-            console.log("id: "+art_id+" name: "+name);
-            console.log(res);
-            res = parseInt(res);
-            let now = Date.now()/1000;
-            let diff = now-res;
-            diff = diff/86400; //in days
-            diff = parseInt(diff);
-            console.log(settings.min_days+" ?? "+diff)
+                // console.log(res);
+              res = res.substr(res.indexOf("creator"));
+              res = res.substr(res.indexOf("creationTs")+13, 10);
+              console.log("id: "+art_id+" name: "+name);
+              console.log(res);
+              res = parseInt(res);
+              let now = Date.now()/1000;
+              let diff = now-res;
+              diff = diff/86400; //in days
+              diff = parseInt(diff);
+              console.log(settings.min_days+" ?? "+diff)
 
-            if(settings.min_days > diff){
-              $("#"+art_id).remove();
-              return;
+              if(settings.min_days > diff){
+                $("#"+art_id).hide();
+                return;
+              }
+              console.log("appendo");
+
+              $("#"+art_id+" .ui-post-creator").append("| "+diff+" days");
             }
-            console.log("appendo");
-
-            $("#"+art_id+" .ui-post-creator").append("| "+diff+" days");
-
-          });
+          );
 
 
         }             
