@@ -6,8 +6,17 @@ This extention doesn't block any account but simply hides the posts.
 
 ## Installation
 Chrome: [Download on the Chrome webstore](https://chrome.google.com/webstore/detail/9gag-post-filter/ajkipkkhchaaccpbpkclolpebkgbmodl)\
-Firefox: [Download on the Firefox addons website](https://addons.mozilla.org/en-US/firefox/addon/9gag-post-filter/)\
-Firefox Android: [short guide](https://youtu.be/cknXID7rV7k)
+Firefox: [Download on the Firefox addons website](https://addons.mozilla.org/en-US/firefox/addon/9gag-post-filter/)
+\
+\
+For Android:\
+Kiwi Browser (Chromium browser with extension support): [Play Store](https://play.google.com/store/apps/details?id=com.kiwibrowser.browser)
+\
+Firefox Nightly Android*: [short guide](https://youtu.be/cknXID7rV7k)
+\
+\
+*Works but is buggier and less convenient than Kiwi IMO, but use whatever you want
+
 
 
 ## Features
