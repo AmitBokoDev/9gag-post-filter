@@ -1,0 +1,24 @@
+body.theme-dark .panel.profile, body.theme-dark .post-cell, body.theme-dark .post-cell .post-meta, body.theme-dark .profile-info, body.theme-dark article .post-content {
+    background-color: #000000 !important;
+    border-bottom-color: #333;
+}
+body.theme-dark .customize-sections-block, body.theme-dark .menu-list {
+    border-bottom: 1px solid #333;
+    background-color: #000000 !important;
+}
+
+body.theme-dark div.post-tag, body.theme-dark section.featured-tag {
+    background-color: #000000 !important;
+}
+body.theme-dark .navbar {
+    background-color: #000000 !important;
+    color: #fff;
+    box-shadow: 0 1px 0 #222;
+}
+body.theme-dark .tabbar {
+    box-shadow: 0 1px 0 #222;
+    background-color: #000000 !important;
+}
+body.theme-dark .content-wrap {
+    background-color: #000000 !important;
+}
