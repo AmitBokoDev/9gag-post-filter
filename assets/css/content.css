@@ -1,3 +1,4 @@
+/* better dark mode */
 body.theme-dark .panel.profile, body.theme-dark .post-cell, body.theme-dark .post-cell .post-meta, body.theme-dark .profile-info, body.theme-dark article .post-content {
     background-color: #000000 !important;
     border-bottom-color: #333;
@@ -21,4 +22,11 @@ body.theme-dark .tabbar {
 }
 body.theme-dark .content-wrap {
     background-color: #000000 !important;
+}
+
+/* change the sound toggle position to not interfere with the controls*/
+.sound-toggle {
+    top: 2px !important;
+    right: 5px !important;
+    left: auto !important;
 }

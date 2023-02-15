@@ -19,7 +19,7 @@ const myTimeout = setTimeout(function(){
           return;
         
         if($(this).attr("id") === undefined){
-          $(this).attr("id","custome-id-"+k);
+          $(this).attr("id","custom-id-"+k);
           k++;
         }
 
@@ -80,8 +80,9 @@ const myTimeout = setTimeout(function(){
               diff = parseInt(diff);
               console.log(settings.min_days+" ?? "+diff)
 
-              if(settings.min_days > diff){
+              if(settings.min_days > diff){ //hide users that are too young
                 $("#"+art_id).hide();
+                $("#"+art_id).addClass("filtered");
                 return;
               }
               console.log("appendo");
@@ -91,7 +92,13 @@ const myTimeout = setTimeout(function(){
           );
 
 
-        }             
+        }
+        try{
+          console.debug("tring to enable controls for "+art_id,$("#"+art_id+""))
+          $("#"+art_id+" video").prop("controls",true);  //enable controls for videos
+        }catch(e){
+          console.debug("can't enable controls for "+art_id,e)
+        }
         $(this).addClass("filtered");
 
     });    
