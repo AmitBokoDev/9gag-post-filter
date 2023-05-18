@@ -1,3 +1,6 @@
+# Notice
+I started a full time job so updated are gonna be rare, but I am working on a small update to bring back the downvote button and make the code more efficient.
+
 
 # 9gag-post-filter
 
