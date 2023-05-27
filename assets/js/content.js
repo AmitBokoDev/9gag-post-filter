@@ -9,10 +9,13 @@ chrome.storage.local.get( ['show_days',"min_days","anon","verified","promoted","
   }
 } ); 
 
+
+
+
 const myTimeout = setTimeout(function(){
 
   setInterval(function(){
-    
+    return;
     console.log(settings);
     $("#list-view-2 article:not(.filtered), .list-view__content article:not(.filtered)").each(function(){
         if($(this).hasClass("filtered"))
