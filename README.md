@@ -1,13 +1,22 @@
-# Notice
-I started a full time job so updated are gonna be rare, but I am working on a small update to bring back the downvote button and make the code more efficient.
-
-
 # 9gag-post-filter
 
-Recently it has become apparant that 9gag is plagued by bots and spammers, so I created this simple extention to remove them from our feeds.\
-This extention doesn't block any account but simply hides the posts.
+It seems like the devs keep breaking their own app, letting bots and spammers run around unchecked, and refuse to give the community what it wants. I want to try to fix that.
 
-## Installation
+##   what is it?
+It's a chrome\firefox extension (that also works on android), that lets you filter posts on 9gag in a way that the devs refuse to implement. 
+
+## Features
+
+- Brought back the downvote count
+- Mark spammer accounts
+- Show days next to the username on every post
+- Hide users with less than X amount of days
+- Hide anonymous 9GAGGER posts
+- Hide users with blue checkmarks
+- Hide 'Promoted' posts
+- Hide posts by tags or words in the title
+
+## How to install
 Chrome: [Download on the Chrome webstore](https://chrome.google.com/webstore/detail/9gag-post-filter/ajkipkkhchaaccpbpkclolpebkgbmodl)\
 Firefox: [Download on the Firefox addons website](https://addons.mozilla.org/en-US/firefox/addon/9gag-post-filter/)
 \
@@ -21,25 +30,11 @@ Firefox Nightly Android*: [short guide](https://youtu.be/cknXID7rV7k)
 *Works but is buggier and less convenient than Kiwi IMO, but use whatever you want
 
 
-
-## Features
-
-- Show days next to the username on every post
-- Hide users with less than X amount of days
-- Hide anonymous 9GAGGER posts
-- Hide users with blue checkmarks
-- Hide 'Promoted' posts
-- Hide posts by tags or words in the title
-
-
-
-## Soon (maybe idk)
-- sus accounts list****
-- Dark mode
-- nice UI
-
-**** with every accout age check, the code also pulls basic info about the last 10 posts that were posted by the user,\
-     by checking if the user posts too frequently, we could mark that user as a possible bot or spammer.
+## Plans for the future (maybe idk)
+- move to a system based on interecepting network requests
+- Add dark mode to the popup
+- Make popup look nicer
+- Buy milk
 
 
 ## Feedback
