@@ -11,10 +11,10 @@ chrome.storage.local.get( ['show_days',"min_days","anon","verified","promoted","
 
 const myTimeout = setTimeout(function(){
 
-  setInterval(function(){
+  setInterval(async function(){
     
     //console.log(settings);
-    $("#list-view-2 article:not(.filtered), .list-view__content article:not(.filtered)").each(function(){
+    await $("#list-view-2 article:not(.filtered), .list-view__content article:not(.filtered)").each(await async function(){
         if($(this).hasClass("filtered"))
           return;
         
@@ -66,104 +66,90 @@ const myTimeout = setTimeout(function(){
         //keep days stuff for last, no unnecessary http requests
         if((settings.show_days || settings.min_days > 0) && name != "9GAGGER"){
           //console.log("GETting...");
-          $.get(
-            "https://9gag.com/u/"+name,
-            function(res){
-                // //console.log(res);
-              let fullres = res;
-              res = res.substr(res.indexOf("creator"));
-              res = res.substr(res.indexOf("creationTs")+13, 10);
-              //console.log("id: "+art_id+" name: "+name);
-              //console.log(res);
-              res = parseInt(res);
-              let now = Date.now()/1000;
-              let diff = now-res;
-              diff = diff/86400; //in days
-              diff = parseInt(diff);
-              //console.log(settings.min_days+" ?? "+diff)
-              if(settings.min_days > diff){ //hide users that are too young
-                $("#"+art_id).hide();
-                $("#"+art_id).addClass("filtered");
-                return;
-              }
-              $("#"+art_id+" .ui-post-creator").append("| "+diff+" days");
-
+          const response = await fetch("https://9gag.com/v1/user-posts/username/"+name+"/type/posts", {
+            "headers": {
+              "accept": "*/*",
+              "accept-language": "en-US,en;q=0.5",
+              "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Brave\";v=\"114\"",
+              "sec-ch-ua-mobile": "?1",
+              "sec-ch-ua-platform": "\"Android\"",
+              "sec-fetch-dest": "empty",
+              "sec-fetch-mode": "cors",
+              "sec-fetch-site": "same-origin",
+              "sec-gpc": "1"
+            },
+            "referrer": "https://9gag.com",
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "body": null,
+            "method": "POST",
+            "mode": "cors",
+            "credentials": "include"
+          });
+          const json = await response.json();
+          console.log(json);
+          let creatorCreation = json.data.profile.creationTs;
+          console.log(creatorCreation);
+          
               
-              // Using regular expressions
-              const regex = /JSON\.parse\("(.*)"\)/; // Matches the entire JSON.parse() expression and captures the content inside the parentheses
-              const match = fullres.match(regex);
-              let jsonString = match ? match[1] : null;
-              // jsonString = jsonString.replaceAll('\\\"',"'");
-              const regex2 = /[^\\]/g;
-              const match2 = (jsonString.match(regex2)).join('');
-              // //console.log('jsonString', jsonString); // JSON.parse("{"key": "value"}")
-              // //console.log('match', match2);
+          let now = Date.now()/1000;
+          let diff = now-creatorCreation;
+          diff = diff/86400; //in days
+          diff = parseInt(diff);
+          //console.log(settings.min_days+" ?? "+diff)
+          if(settings.min_days > diff){ //hide users that are too young
+            $("#"+art_id).hide();
+            $("#"+art_id).addClass("filtered");
+            return;
+          }
+          $("#"+art_id+" .ui-post-creator").append("| "+diff+" days");
+      
+      
+          // const json = JSON.parse(jsonString);
+        
+          //console.log('jsonString2', json); // JSON.parse("{"key": "value"}")
+          if(settings.spammers && json.data.posts.length > 1){
+            let posts = json.data.posts;
+            let postDiff = [];
+            for(let i =0; i<posts.length; i++){
+              let creationTs = posts[i].creationTs;
+              if(i == 0)
+                postDiff[i] = ((Date.now()/1000) - creationTs)/3600 //as hours
+              else 
+                postDiff[i] = (posts[i-1].creationTs - creationTs)/3600 ;
               
-              if(jsonString === null){
-                console.error('ERROR FETCHING USER DATA FOR '+name);
-              } 
-              
-              try{
-                var json = JSON.parse(match2);
-                // const json = JSON.parse(jsonString);
-                if(json !== null){
-                  //console.log('jsonString2', json); // JSON.parse("{"key": "value"}")
-                  if(settings.spammers){
-                    let posts = json.data.posts;
-                    let postDiff = [];
-                    for(let i =0; i<posts.length; i++){
-                      let creationTs = posts[i].creationTs;
-                      if(i == 0)
-                        postDiff[i] = ((Date.now()/1000) - creationTs)/3600 //as hours
-                      else 
-                        postDiff[i] = (posts[i-1].creationTs - creationTs)/3600 ;
-                      
-                    }
-                    //console.log(name+" diffs ",postDiff);
-                    const average = array  => array .reduce((a, b) => a + b) / array .length
-                    let diffAve =  average(postDiff);
-                    //console.log("averages: ",diffAve);
-                    
-                    //console.log('diffsetting ',settings.spammers_hours);
-                    // //console.log('stuff ',Number(settings.spammers_hours));
-                    let diffset = !isNaN(settings.spammers_hours) ? settings.spammers_hours : 12
-                    //console.log('diffset ',diffset);
-                    if(diffAve < diffset){
-                      $("#"+art_id+" .ui-post-creator").append(`<span style="color:red;font-weight:bold;">| SPAMMER</span>`);
-                      //console.log(name+" is a spammer")
-                    } 
-
-                  }
-                  //console.log('aids');
-                  let post_id = (($("#"+art_id+" header a")[4]).href.split('/'))[4];
-                  //console.log('post_id',post_id);
-                  //return the downvotes
-                  let posts = json.data.posts;
-                  let downvotes = null;
-                 
-                  for(let i =0; i<posts.length; i++){
-                    if(posts[i].id == post_id){
-                      downvotes = posts[i].downVoteCount;
-                      break;
-                    }                                   
-                  }
-                  //console.log('postId ',post_id," downvotes", downvotes);
-                  if(downvotes!== null)
-                    $("#"+art_id+" .post-vote").append(`<span class="post-vote__text downvote">${downvotes}</span>`);
-                  
-
-
-  
-                }
-              }catch(e){
-                // console.error(e,'ERROR PARSING JSON',match2);
-                var json = null;
-              }
-
             }
-          );
+            //console.log(name+" diffs ",postDiff);
+            const average = array  => array .reduce((a, b) => a + b) / array .length
+            let diffAve =  average(postDiff);
+            //console.log("averages: ",diffAve);
+            
+            //console.log('diffsetting ',settings.spammers_hours);
+            // //console.log('stuff ',Number(settings.spammers_hours));
+            let diffset = !isNaN(settings.spammers_hours) ? settings.spammers_hours : 12
+            //console.log('diffset ',diffset);
+            if(diffAve < diffset){
+              $("#"+art_id+" .ui-post-creator").append(`<span style="color:red;font-weight:bold;">| SPAMMER</span>`);
+              //console.log(name+" is a spammer")
+            } 
 
-
+          }
+          //console.log('aids');
+          let post_id = (($("#"+art_id+" header a")[4]).href.split('/'))[4];
+          //console.log('post_id',post_id);
+          //return the downvotes
+          let posts = json.data.posts;
+          let downvotes = null;
+          
+          for(let i =0; i<posts.length; i++){
+            if(posts[i].id == post_id){
+              downvotes = posts[i].downVoteCount;
+              break;
+            }                                   
+          }
+          //console.log('postId ',post_id," downvotes", downvotes);
+          if(downvotes!== null)
+            $("#"+art_id+" .post-vote").append(`<span class="post-vote__text downvote">${downvotes}</span>`);
+          
         }
         try{
           console.debug("tring to enable controls for "+art_id,$("#"+art_id+""))
