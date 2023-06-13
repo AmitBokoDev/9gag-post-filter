@@ -14,10 +14,9 @@ const myTimeout = setTimeout(function(){
   setInterval(async function(){
     
     //console.log(settings);
-    await $("#list-view-2 article:not(.filtered), .list-view__content article:not(.filtered)").each(await async function(){
-        if($(this).hasClass("filtered"))
-          return;
-        
+    await $("#list-view-2 article:not(.filtered,.filtering), .list-view__content article:not(.filtered,.filtering)").each(async function(){
+        // console.log('filtering ', $(this)); 
+        $(this).addClass("filtering");
         if($(this).attr("id") === undefined){
           $(this).attr("id","custom-id-"+k);
           k++;
@@ -133,9 +132,10 @@ const myTimeout = setTimeout(function(){
             } 
 
           }
-          //console.log('aids');
-          let post_id = (($("#"+art_id+" header a")[4]).href.split('/'))[4];
-          //console.log('post_id',post_id);
+          // console.log($("#"+art_id+" header a"));
+          
+          let post_id = ([...document.querySelectorAll("#"+art_id+" header a")].at(-1)).href.split('/').at(-1)
+          // console.log('post_id',post_id);
           //return the downvotes
           let posts = json.data.posts;
           let downvotes = null;
@@ -147,8 +147,10 @@ const myTimeout = setTimeout(function(){
             }                                   
           }
           //console.log('postId ',post_id," downvotes", downvotes);
-          if(downvotes!== null)
+          if(downvotes!== null){
             $("#"+art_id+" .post-vote").append(`<span class="post-vote__text downvote">${downvotes}</span>`);
+            $("#"+art_id+" .downvote.grouped ").after(`<span class="post-vote__text downvote">${downvotes}</span>`);
+          }
           
         }
         try{
