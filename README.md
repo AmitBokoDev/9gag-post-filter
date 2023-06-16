@@ -1,3 +1,7 @@
+## Notice: it broke again
+9gag changed the UI again (looks pretty vad IMO so most of the functionality is broken, will fix in the next few days.\
+Also the new cheers thing looks dumb so I'll add a way to remove it.
+
 # 9gag-post-filter
 
 It seems like the devs keep breaking their own app, letting bots and spammers run around unchecked, and refuse to give the community what it wants. I want to try to fix that.
