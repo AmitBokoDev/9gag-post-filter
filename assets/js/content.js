@@ -1,5 +1,10 @@
 var settings;
 var $tags = [];
+const clickEvent = new MouseEvent("click", {
+  "view": window,
+  "bubbles": true,
+  "cancelable": false
+});
 var k = 0; //numerical id for id-less elements, mostly on mobile browser
 chrome.storage.local.get( ['show_days',"min_days","anon","verified","promoted","tags","title","spammers","spammers_hours"], data => {
   settings = data;
@@ -8,7 +13,23 @@ chrome.storage.local.get( ['show_days',"min_days","anon","verified","promoted","
     $tags = $tags.trim().split(",");
   }
 } ); 
-
+const getNameFromMenu = async (art_id)=>{
+  if(document.querySelector("#"+art_id+" .uikit-popup-menu") !== null){ //desktop
+    let el = document.querySelector("#"+art_id+" .uikit-popup-menu");
+    await el.querySelector('.button').click();
+    let name = await ([...await el.querySelectorAll('.menu a')].at(-1).text.split("@")[1])
+    el.querySelector('.button').click();
+    return name;
+  }else{
+    let el = document.querySelector("#"+art_id+" .post-top a.icon");
+    await el.click();
+    let name = await [...[...document.querySelectorAll(".overlay.overlay-bottom-sheet.bottom-sheet .modal__content .menu-list")][1].querySelectorAll('a')].at(-1).text.split('@')[1];
+    await [...document.querySelectorAll(".overlay.overlay-bottom-sheet.bottom-sheet")].forEach(async element => {
+      await element.click();
+    });
+    return name;
+  }
+}
 const myTimeout = setTimeout(function(){
 
   setInterval(async function(){
@@ -22,25 +43,38 @@ const myTimeout = setTimeout(function(){
           k++;
         }
 
-        //console.log($(this), $(this).attr("id")+" is unfiltered")
+        console.log($(this), $(this).attr("id")+" is unfiltered")
 
         let art_id = $(this).attr("id");
-        let name = $("#"+art_id+" .ui-post-creator__author").text();
+        let article = document.querySelector("#"+art_id);
+        let name = document.querySelector("#"+art_id+" .ui-post-creator__author") !== null? 
+        document.querySelector("#"+art_id+" .ui-post-creator__author").text:
+        await getNameFromMenu(art_id);
+        if(document.querySelector("#"+art_id+" .ui-post-creator") === null){
+          $("#"+art_id+" .post-header__left").append(`<span>| <a style="color:white;font-weight:bold;font-size:1rem;" href="https://9gag.com/u/${name}">@${name}</a></span>`);
+          $("#"+art_id+" .post-meta.mobile").append(`<br/><span> <a style="color:white;font-weight:bold;font-size:1rem;" href="https://9gag.com/u/${name}">@${name}</a></span>`);
+
+        }
+        console.log(article, 'name after func',name);
+        // let name = 'aaaaa';
+        
         let title = $("#"+art_id+" header a h2").text();
+        
         let post_tags = [];
-        $("#"+art_id+" section.featured-tag").children().each(function(){
+        $("#"+art_id+" .post-tags").children().each(function(){
           post_tags.push($(this).text().toLowerCase());
         });
-        //console.log("post tags", post_tags);
-        //console.log("global tags", $tags);
-
+        if(document.querySelector("#"+art_id+" .post-meta__list-view .name") !== null)
+            post_tags.push(document.querySelector("#"+art_id+" .post-meta__list-view .name").text.toLowerCase());
+        console.log(article,"post tags", post_tags);
+        console.log("global tags", $tags);
 
         if(
           (name == "9GAGGER" && settings.anon) || //hide anons
           ( document.querySelectorAll("#"+art_id+" .ui-post-creator__badge").length > 0 && settings.verified) || // hide verified
           ($("#"+art_id+" .ui-post-creator__author").hasClass("promoted") && settings.promoted) // hide promoted
         ){
-          //console.log("need to hide "+name);
+          console.log("anon/promoted need to hide ",article);
           $(this).hide();
           $(this).addClass("filtered");
           return;
@@ -54,7 +88,7 @@ const myTimeout = setTimeout(function(){
             (settings.title && title.toLowerCase().indexOf(tag.trim().toLowerCase()) > -1) || //search by title
             (post_tags.includes(tag)) //search by post tags
           ){
-            //console.log('filtered by tags');
+            console.log(article,'filtered by tags');
             $("#"+art_id).hide();
             $(this).addClass("filtered");
             return;
@@ -87,7 +121,7 @@ const myTimeout = setTimeout(function(){
           const json = await response.json();
           console.log(json);
           let creatorCreation = json.data.profile.creationTs;
-          console.log(creatorCreation);
+          console.log(article,'creator ts',creatorCreation);
           
               
           let now = Date.now()/1000;
@@ -96,11 +130,17 @@ const myTimeout = setTimeout(function(){
           diff = parseInt(diff);
           //console.log(settings.min_days+" ?? "+diff)
           if(settings.min_days > diff){ //hide users that are too young
+            console.log(article,"creator too new");
             $("#"+art_id).hide();
             $("#"+art_id).addClass("filtered");
             return;
           }
-          $("#"+art_id+" .ui-post-creator").append("| "+diff+" days");
+          if(document.querySelector("#"+art_id+" .ui-post-creator") !== null)
+            $("#"+art_id+" .ui-post-creator").append("| "+diff+" days");
+          else{
+            $("#"+art_id+" .post-header__left").append("| "+diff+" days");
+            $("#"+art_id+" .post-meta.mobile").append("| "+diff+" days");
+          }
       
       
           // const json = JSON.parse(jsonString);
@@ -127,7 +167,12 @@ const myTimeout = setTimeout(function(){
             let diffset = !isNaN(settings.spammers_hours) ? settings.spammers_hours : 12
             //console.log('diffset ',diffset);
             if(diffAve < diffset){
-              $("#"+art_id+" .ui-post-creator").append(`<span style="color:red;font-weight:bold;">| SPAMMER</span>`);
+              if(document.querySelector("#"+art_id+" .ui-post-creator")!== null)
+               $("#"+art_id+" .ui-post-creator").append(`<span style="color:red;font-weight:bold;">| SPAMMER</span>`);
+              else{
+                $("#"+art_id+" .post-header__left").append(`<span style="color:red;font-weight:bold;">| SPAMMER</span>`);
+                $("#"+art_id+" .post-meta.mobile").append(`<span style="color:red;font-weight:bold;">| SPAMMER</span>`);
+              }
               //console.log(name+" is a spammer")
             } 
 

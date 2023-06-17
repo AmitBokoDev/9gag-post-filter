@@ -30,3 +30,8 @@ body.theme-dark .content-wrap {
     right: 5px !important;
     left: auto !important;
 }
+
+.post-meta.mobile{
+    line-height: 50%;
+    margin-bottom: 0.5rem;
+}
