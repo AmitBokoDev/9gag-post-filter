@@ -22,8 +22,9 @@ const getNameFromMenu = async (art_id)=>{
     return name;
   }else{
     let el = document.querySelector("#"+art_id+" .post-top a.icon");
+    let post_id = document.querySelector('#'+art_id+' a[href*="/gag/"]')?.href.split('/').at(-1);
     await el.click();
-    let name = await [...[...document.querySelectorAll(".overlay.overlay-bottom-sheet.bottom-sheet .modal__content .menu-list")][1].querySelectorAll('a')].at(-1).text.split('@')[1];
+    let name = await [...document.querySelector(".overlay.overlay-bottom-sheet.bottom-sheet .modal__content .menu-list a[href*='"+post_id+"']").parentElement.parentElement.querySelectorAll('a')].at(-1).text.split('@')[1];
     await [...document.querySelectorAll(".overlay.overlay-bottom-sheet.bottom-sheet")].forEach(async element => {
       await element.click();
     });
@@ -67,7 +68,7 @@ const myTimeout = setTimeout(function(){
         if(document.querySelector("#"+art_id+" .post-meta__list-view .name") !== null)
             post_tags.push(document.querySelector("#"+art_id+" .post-meta__list-view .name").text.toLowerCase());
         console.log(article,"post tags", post_tags);
-        console.log("global tags", $tags);
+        console.log(article,"global tags", $tags);
 
         if(
           (name == "9GAGGER" && settings.anon) || //hide anons
@@ -80,12 +81,13 @@ const myTimeout = setTimeout(function(){
           return;
         }
 
+        
         for(let i = 0; i<$tags.length; i++){ //hide tags
           let tag = $tags[i];
-          //console.log("tag ", tag);
-          //console.log("in post> ", post_tags.includes(tag));
+          console.log(article,"tag ", tag);
+          console.log(article,"in post> ", post_tags.includes(tag));
           if(
-            (settings.title && title.toLowerCase().indexOf(tag.trim().toLowerCase()) > -1) || //search by title
+            (settings.title && title.toLowerCase().indexOf(tag.trim().toLowerCase()) > -1 && tag.trim().toLowerCase() !== '') || //search by title
             (post_tags.includes(tag)) //search by post tags
           ){
             console.log(article,'filtered by tags');
@@ -146,7 +148,7 @@ const myTimeout = setTimeout(function(){
           // const json = JSON.parse(jsonString);
         
           //console.log('jsonString2', json); // JSON.parse("{"key": "value"}")
-          if(settings.spammers && json.data.posts.length > 1){
+          if(settings.spammers && json.data.posts.length >= 10){
             let posts = json.data.posts;
             let postDiff = [];
             for(let i =0; i<posts.length; i++){
