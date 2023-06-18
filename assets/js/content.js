@@ -6,7 +6,7 @@ const clickEvent = new MouseEvent("click", {
   "cancelable": false
 });
 var k = 0; //numerical id for id-less elements, mostly on mobile browser
-chrome.storage.local.get( ['show_days',"min_days","anon","verified","promoted","tags","title","spammers","spammers_hours"], data => {
+chrome.storage.local.get( ['show_days',"min_days","anon","verified","promoted","tags","title","spammers","spammers_hours","cheers"], data => {
   settings = data;
   if(settings.tags !== undefined){
     $tags = settings.tags;
@@ -96,6 +96,11 @@ const myTimeout = setTimeout(function(){
             return;
           }
 
+        }
+
+        if(settings.cheers){
+          $("#"+art_id+" a.post-award-btn").hide();
+          $("#"+art_id+" post-award-users").hide();
         }
 
         //keep days stuff for last, no unnecessary http requests
