@@ -1,21 +1,45 @@
 var settings;
 var $tags = [];
+const clickEvent = new MouseEvent("click", {
+  "view": window,
+  "bubbles": true,
+  "cancelable": false
+});
 var k = 0; //numerical id for id-less elements, mostly on mobile browser
-chrome.storage.local.get( ['show_days',"min_days","anon","verified","promoted","tags","title","spammers","spammers_hours"], data => {
+chrome.storage.local.get( ['show_days',"min_days","anon","verified","promoted","tags","title","spammers","spammers_hours","cheers"], data => {
   settings = data;
   if(settings.tags !== undefined){
     $tags = settings.tags;
     $tags = $tags.trim().split(",");
   }
 } ); 
-
+const getNameFromMenu = async (art_id)=>{
+  if(document.querySelector("#"+art_id+" .uikit-popup-menu") !== null){ //desktop
+    let el = document.querySelector("#"+art_id+" .uikit-popup-menu");
+    await el.querySelector('.button').click();
+    let name = await ([...await el.querySelectorAll('.menu a')].at(-1).text.split("@")[1])
+    el.querySelector('.button').click();
+    return name;
+  }else{
+    let el = document.querySelector("#"+art_id+" .post-top a.icon");
+    let post_id = document.querySelector('#'+art_id+' a[href*="/gag/"]')?.href.split('/').at(-1);
+    try{
+      await el.click();
+    }catch(e){}
+    let name = await [...document.querySelector(".overlay.overlay-bottom-sheet.bottom-sheet .modal__content .menu-list a[href*='"+post_id+"']").parentElement.parentElement.querySelectorAll('a')].at(-1).text.split('@')[1];
+    await [...document.querySelectorAll(".overlay.overlay-bottom-sheet.bottom-sheet")].forEach(async element => {
+      await element.click();
+    });
+    return name;
+  }
+}
 const myTimeout = setTimeout(function(){
 
   setInterval(async function(){
     
-    //console.log(settings);
+    ////console.log(settings);
     await $("#list-view-2 article:not(.filtered,.filtering), .list-view__content article:not(.filtered,.filtering)").each(async function(){
-        // console.log('filtering ', $(this)); 
+        // //console.log('filtering ', $(this)); 
         $(this).addClass("filtering");
         if($(this).attr("id") === undefined){
           $(this).attr("id","custom-id-"+k);
@@ -25,36 +49,50 @@ const myTimeout = setTimeout(function(){
         //console.log($(this), $(this).attr("id")+" is unfiltered")
 
         let art_id = $(this).attr("id");
-        let name = $("#"+art_id+" .ui-post-creator__author").text();
+        let article = document.querySelector("#"+art_id);
+        let name = document.querySelector("#"+art_id+" .ui-post-creator__author") !== null? 
+        document.querySelector("#"+art_id+" .ui-post-creator__author").text:
+        await getNameFromMenu(art_id);
+        if(document.querySelector("#"+art_id+" .ui-post-creator") === null){
+          $("#"+art_id+" .post-header__left").append(`<span>| <a style="color:white;font-weight:bold;font-size:1rem;" href="https://9gag.com/u/${name}">@${name}</a></span>`);
+          $("#"+art_id+" .post-meta.mobile").append(`<br/><span> <a style="color:white;font-weight:bold;font-size:1rem;" href="https://9gag.com/u/${name}">@${name}</a></span>`);
+
+        }
+        //console.log(article, 'name after func',name);
+        // let name = 'aaaaa';
+        
         let title = $("#"+art_id+" header a h2").text();
+        
         let post_tags = [];
-        $("#"+art_id+" section.featured-tag").children().each(function(){
+        $("#"+art_id+" .post-tags").children().each(function(){
           post_tags.push($(this).text().toLowerCase());
         });
-        //console.log("post tags", post_tags);
-        //console.log("global tags", $tags);
-
+        if(document.querySelector("#"+art_id+" .post-meta__list-view .name") !== null)
+            post_tags.push(document.querySelector("#"+art_id+" .post-meta__list-view .name").text.toLowerCase());
+        //console.log(article,"post tags", post_tags);
+        //console.log(article,"global tags", $tags);
 
         if(
           (name == "9GAGGER" && settings.anon) || //hide anons
           ( document.querySelectorAll("#"+art_id+" .ui-post-creator__badge").length > 0 && settings.verified) || // hide verified
           ($("#"+art_id+" .ui-post-creator__author").hasClass("promoted") && settings.promoted) // hide promoted
         ){
-          //console.log("need to hide "+name);
+          //console.log("anon/promoted need to hide ",article);
           $(this).hide();
           $(this).addClass("filtered");
           return;
         }
 
+        
         for(let i = 0; i<$tags.length; i++){ //hide tags
           let tag = $tags[i];
-          //console.log("tag ", tag);
-          //console.log("in post> ", post_tags.includes(tag));
+          //console.log(article,"tag ", tag);
+          //console.log(article,"in post> ", post_tags.includes(tag));
           if(
-            (settings.title && title.toLowerCase().indexOf(tag.trim().toLowerCase()) > -1) || //search by title
+            (settings.title && title.toLowerCase().indexOf(tag.trim().toLowerCase()) > -1 && tag.trim().toLowerCase() !== '') || //search by title
             (post_tags.includes(tag)) //search by post tags
           ){
-            //console.log('filtered by tags');
+            //console.log(article,'filtered by tags');
             $("#"+art_id).hide();
             $(this).addClass("filtered");
             return;
@@ -62,9 +100,14 @@ const myTimeout = setTimeout(function(){
 
         }
 
+        if(settings.cheers){
+          $("#"+art_id+" a.post-award-btn").hide();
+          $("#"+art_id+" post-award-users").hide();
+        }
+
         //keep days stuff for last, no unnecessary http requests
         if((settings.show_days || settings.min_days > 0) && name != "9GAGGER"){
-          //console.log("GETting...");
+          ////console.log("GETting...");
           const response = await fetch("https://9gag.com/v1/user-posts/username/"+name+"/type/posts", {
             "headers": {
               "accept": "*/*",
@@ -85,28 +128,34 @@ const myTimeout = setTimeout(function(){
             "credentials": "include"
           });
           const json = await response.json();
-          console.log(json);
+          //console.log(json);
           let creatorCreation = json.data.profile.creationTs;
-          console.log(creatorCreation);
+          //console.log(article,'creator ts',creatorCreation);
           
               
           let now = Date.now()/1000;
           let diff = now-creatorCreation;
           diff = diff/86400; //in days
           diff = parseInt(diff);
-          //console.log(settings.min_days+" ?? "+diff)
+          ////console.log(settings.min_days+" ?? "+diff)
           if(settings.min_days > diff){ //hide users that are too young
+            //console.log(article,"creator too new");
             $("#"+art_id).hide();
             $("#"+art_id).addClass("filtered");
             return;
           }
-          $("#"+art_id+" .ui-post-creator").append("| "+diff+" days");
+          if(document.querySelector("#"+art_id+" .ui-post-creator") !== null)
+            $("#"+art_id+" .ui-post-creator").append("| "+diff+" days");
+          else{
+            $("#"+art_id+" .post-header__left").append("| "+diff+" days");
+            $("#"+art_id+" .post-meta.mobile").append("| "+diff+" days");
+          }
       
       
           // const json = JSON.parse(jsonString);
         
-          //console.log('jsonString2', json); // JSON.parse("{"key": "value"}")
-          if(settings.spammers && json.data.posts.length > 1){
+          ////console.log('jsonString2', json); // JSON.parse("{"key": "value"}")
+          if(settings.spammers && json.data.posts.length >= 10){
             let posts = json.data.posts;
             let postDiff = [];
             for(let i =0; i<posts.length; i++){
@@ -117,25 +166,30 @@ const myTimeout = setTimeout(function(){
                 postDiff[i] = (posts[i-1].creationTs - creationTs)/3600 ;
               
             }
-            //console.log(name+" diffs ",postDiff);
+            ////console.log(name+" diffs ",postDiff);
             const average = array  => array .reduce((a, b) => a + b) / array .length
             let diffAve =  average(postDiff);
-            //console.log("averages: ",diffAve);
+            ////console.log("averages: ",diffAve);
             
-            //console.log('diffsetting ',settings.spammers_hours);
-            // //console.log('stuff ',Number(settings.spammers_hours));
+            ////console.log('diffsetting ',settings.spammers_hours);
+            // ////console.log('stuff ',Number(settings.spammers_hours));
             let diffset = !isNaN(settings.spammers_hours) ? settings.spammers_hours : 12
-            //console.log('diffset ',diffset);
+            ////console.log('diffset ',diffset);
             if(diffAve < diffset){
-              $("#"+art_id+" .ui-post-creator").append(`<span style="color:red;font-weight:bold;">| SPAMMER</span>`);
-              //console.log(name+" is a spammer")
+              if(document.querySelector("#"+art_id+" .ui-post-creator")!== null)
+               $("#"+art_id+" .ui-post-creator").append(`<span style="color:red;font-weight:bold;">| SPAMMER</span>`);
+              else{
+                $("#"+art_id+" .post-header__left").append(`<span style="color:red;font-weight:bold;">| SPAMMER</span>`);
+                $("#"+art_id+" .post-meta.mobile").append(`<span style="color:red;font-weight:bold;">| SPAMMER</span>`);
+              }
+              ////console.log(name+" is a spammer")
             } 
 
           }
-          // console.log($("#"+art_id+" header a"));
+          // //console.log($("#"+art_id+" header a"));
           
           let post_id = ([...document.querySelectorAll("#"+art_id+" header a")].at(-1)).href.split('/').at(-1)
-          // console.log('post_id',post_id);
+          // //console.log('post_id',post_id);
           //return the downvotes
           let posts = json.data.posts;
           let downvotes = null;
@@ -146,7 +200,7 @@ const myTimeout = setTimeout(function(){
               break;
             }                                   
           }
-          //console.log('postId ',post_id," downvotes", downvotes);
+          ////console.log('postId ',post_id," downvotes", downvotes);
           if(downvotes!== null){
             $("#"+art_id+" .post-vote").append(`<span class="post-vote__text downvote">${downvotes}</span>`);
             $("#"+art_id+" .downvote.grouped ").after(`<span class="post-vote__text downvote">${downvotes}</span>`);
