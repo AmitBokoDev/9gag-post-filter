@@ -1,3 +1,4 @@
+var $donwvotes_checkbox = $("#donwvotes_checkbox");
 var $show_days = $("#days_checkbox");
 var $days_input = $("#days_input");
 var $verified_checkbox = $("#verified_checkbox");
@@ -6,12 +7,14 @@ var $spammers_checkbox = $("#spammers_checkbox");
 var $spammers_input = $("#spammers_input");
 var $cheers_checkbox = $("#cheers_checkbox");
 var $controls_checkbox = $("#controls_checkbox");
+// donwvotes_checkbox
 
 
 // $(document).ready(async function(){
 
-	chrome.storage.local.get( ['show_days',"min_days","verified","promoted","spammers","spammers_hours","cheers","controls"], data => {
+	chrome.storage.local.get( ['downvotes','show_days',"min_days","verified","promoted","spammers","spammers_hours","cheers","controls"], data => {
 		// alert(data.show_days);
+		$donwvotes_checkbox.prop('checked', data.downvotes);
 		$show_days.prop('checked', data.show_days);
 		$verified_checkbox.prop('checked', data.verified);
 		$days_input.val(data.min_days);
@@ -24,6 +27,12 @@ var $controls_checkbox = $("#controls_checkbox");
 
 	$show_days.on("change", async function(){
 		chrome.storage.local.set({ "show_days": $show_days.prop("checked") }).then(() => {
+			// alert("Value is set to " + $show_days.prop("checked"));
+		});
+	});
+
+	$donwvotes_checkbox.on("change", async function(){
+		chrome.storage.local.set({ "downvotes": $donwvotes_checkbox.prop("checked") }).then(() => {
 			// alert("Value is set to " + $show_days.prop("checked"));
 		});
 	});
