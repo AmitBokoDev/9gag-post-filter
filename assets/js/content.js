@@ -1,17 +1,12 @@
 var settings;
-var $tags = [];
 const clickEvent = new MouseEvent("click", {
   "view": window,
   "bubbles": true,
   "cancelable": false
 });
 var k = 0; //numerical id for id-less elements, mostly on mobile browser
-chrome.storage.local.get( ['show_days',"min_days","anon","verified","promoted","tags","title","spammers","spammers_hours","cheers"], data => {
+chrome.storage.local.get( ['show_days',"min_days","verified","promoted","spammers","spammers_hours","cheers"], data => {
   settings = data;
-  if(settings.tags !== undefined){
-    $tags = settings.tags;
-    $tags = $tags.trim().split(",");
-  }
 } ); 
 const getNameFromMenu = async (art_id)=>{
   if(document.querySelector("#"+art_id+" .uikit-popup-menu") !== null){ //desktop
@@ -60,45 +55,17 @@ const myTimeout = setTimeout(function(){
         }
         //console.log(article, 'name after func',name);
         // let name = 'aaaaa';
-        
-        let title = $("#"+art_id+" header a h2").text();
-        
-        let post_tags = [];
-        $("#"+art_id+" .post-tags").children().each(function(){
-          post_tags.push($(this).text().toLowerCase());
-        });
-        if(document.querySelector("#"+art_id+" .post-meta__list-view .name") !== null)
-            post_tags.push(document.querySelector("#"+art_id+" .post-meta__list-view .name").text.toLowerCase());
-        //console.log(article,"post tags", post_tags);
-        //console.log(article,"global tags", $tags);
 
         if(
-          (name == "9GAGGER" && settings.anon) || //hide anons
           ( document.querySelectorAll("#"+art_id+" .ui-post-creator__badge").length > 0 && settings.verified) || // hide verified
           ($("#"+art_id+" .ui-post-creator__author").hasClass("promoted") && settings.promoted) // hide promoted
         ){
-          //console.log("anon/promoted need to hide ",article);
+          //console.log("promoted need to hide ",article);
           $(this).hide();
           $(this).addClass("filtered");
           return;
         }
 
-        
-        for(let i = 0; i<$tags.length; i++){ //hide tags
-          let tag = $tags[i];
-          //console.log(article,"tag ", tag);
-          //console.log(article,"in post> ", post_tags.includes(tag));
-          if(
-            (settings.title && title.toLowerCase().indexOf(tag.trim().toLowerCase()) > -1 && tag.trim().toLowerCase() !== '') || //search by title
-            (post_tags.includes(tag)) //search by post tags
-          ){
-            //console.log(article,'filtered by tags');
-            $("#"+art_id).hide();
-            $(this).addClass("filtered");
-            return;
-          }
-
-        }
 
         if(settings.cheers){
           $("#"+art_id+" a.post-award-btn").hide();
