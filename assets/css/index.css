@@ -7,9 +7,14 @@ body {
 }
 
 #popup-header h1 {
-    font-size: 12px;
+    font-size: 24px;
     margin: 0;
     margin-bottom: 10px;
+}
+
+h2{
+    margin: 0;
+    font-size: 16px;
 }
 
 .button {
