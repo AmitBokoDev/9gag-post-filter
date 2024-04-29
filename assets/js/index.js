@@ -1,108 +1,58 @@
-var $donwvotes_checkbox = $("#donwvotes_checkbox");
-var $show_days = $("#days_checkbox");
-var $days_input = $("#days_input");
-var $verified_checkbox = $("#verified_checkbox");
-var $promoted_checkbox = $("#promoted_checkbox");
-var $spammers_checkbox = $("#spammers_checkbox");
-var $spammers_input = $("#spammers_input");
-var $cheers_checkbox = $("#cheers_checkbox");
-var $controls_checkbox = $("#controls_checkbox");
-// donwvotes_checkbox
+// Selecting elements
+var $downvotesCheckbox = $("#downvotes_checkbox");
+var $showDaysCheckbox = $("#days_checkbox");
+var $daysInput = $("#days_input");
+var $verifiedCheckbox = $("#verified_checkbox");
+var $promotedCheckbox = $("#promoted_checkbox");
+var $spammersCheckbox = $("#spammers_checkbox");
+var $spammersInput = $("#spammers_input");
+var $cheersCheckbox = $("#cheers_checkbox");
+var $controlsCheckbox = $("#controls_checkbox");
 
+// Loading settings from storage
+chrome.storage.local.get([
+  'downvotes', 'show_days', "min_days", "verified", "promoted", "spammers", "spammers_hours", "cheers", "controls"
+], data => {
+  $downvotesCheckbox.prop('checked', data.downvotes);
+  $showDaysCheckbox.prop('checked', data.show_days);
+  $daysInput.val(data.min_days);
+  $verifiedCheckbox.prop('checked', data.verified);
+  $promotedCheckbox.prop('checked', data.promoted);
+  $spammersCheckbox.prop('checked', data.spammers);
+  $spammersInput.val(data.spammers_hours);
+  $cheersCheckbox.prop('checked', data.cheers);
+  $controlsCheckbox.prop('checked', data.controls);
+});
 
-// $(document).ready(async function(){
+// Utility function to update Chrome storage
+function updateChromeStorage(settingKey, value) {
+  let setting = {};
+  setting[settingKey] = value;
+  chrome.storage.local.set(setting);
+}
 
-	chrome.storage.local.get( ['downvotes','show_days',"min_days","verified","promoted","spammers","spammers_hours","cheers","controls"], data => {
-		// alert(data.show_days);
-		$donwvotes_checkbox.prop('checked', data.downvotes);
-		$show_days.prop('checked', data.show_days);
-		$verified_checkbox.prop('checked', data.verified);
-		$days_input.val(data.min_days);
-		$promoted_checkbox.prop('checked', data.promoted);
-		$spammers_checkbox.prop('checked', data.spammers);
-		$spammers_input.val(data.spammers_hours);
-		$cheers_checkbox.prop('checked', data.cheers);
-		$controls_checkbox.prop('checked', data.controls);
-	} ); 
+// Event handlers for checkboxes and inputs
+function setupCheckboxHandlers($checkbox, settingName) {
+  $checkbox.on("change", function() {
+    updateChromeStorage(settingName, $checkbox.prop("checked"));
+  });
+}
 
-	$show_days.on("change", async function(){
-		chrome.storage.local.set({ "show_days": $show_days.prop("checked") }).then(() => {
-			// alert("Value is set to " + $show_days.prop("checked"));
-		});
-	});
+function setupInputHandlers($input, settingName) {
+  $input.on("change", function() {
+    updateChromeStorage(settingName, $input.val());
+  });
+}
 
-	$donwvotes_checkbox.on("change", async function(){
-		chrome.storage.local.set({ "downvotes": $donwvotes_checkbox.prop("checked") }).then(() => {
-			// alert("Value is set to " + $show_days.prop("checked"));
-		});
-	});
+// Setting up event handlers for all checkboxes
+setupCheckboxHandlers($downvotesCheckbox, "downvotes");
+setupCheckboxHandlers($showDaysCheckbox, "show_days");
+setupCheckboxHandlers($verifiedCheckbox, "verified");
+setupCheckboxHandlers($promotedCheckbox, "promoted");
+setupCheckboxHandlers($spammersCheckbox, "spammers");
+setupCheckboxHandlers($cheersCheckbox, "cheers");
+setupCheckboxHandlers($controlsCheckbox, "controls");
 
-	$verified_checkbox.on("change", async function(){
-		chrome.storage.local.set({ "verified": $verified_checkbox.prop("checked") }).then(() => {
-			// alert("Value is set to " + $show_days.prop("checked"));
-		});
-	});
-
-
-	$days_input.on("change", async function(){
-		chrome.storage.local.set({ "min_days": $days_input.val() }).then(() => {
-			// alert("Value is set to " + $show_days.prop("checked"));
-		});
-	});
-
-	$promoted_checkbox.on("change", async function(){
-		chrome.storage.local.set({ "promoted": $promoted_checkbox.prop("checked") }).then(() => {
-			// alert("Value is set to " + $show_days.prop("checked"));
-		});
-	});
-
-
-	$spammers_checkbox.on("change", async function(){
-		chrome.storage.local.set({ "spammers": $spammers_checkbox.prop("checked") }).then(() => {
-			// alert("Value is set to " + $show_days.prop("checked"));
-		});
-	});
-	
-	$spammers_input.on("change", async function(){
-		chrome.storage.local.set({ "spammers_hours": $spammers_input.val() }).then(() => {
-			// alert("Value is set to " + $show_days.prop("checked"));
-		});
-	});
-	
-	$cheers_checkbox.on("change", async function(){
-		chrome.storage.local.set({ "cheers": $cheers_checkbox.prop("checked") }).then(() => {
-			// alert("Value is set to " + $show_days.prop("checked"));
-		});
-	});
-
-	$controls_checkbox.on("change", async function(){
-		chrome.storage.local.set({ "controls": $controls_checkbox.prop("checked") }).then(() => {
-			// alert("Value is set to " + $show_days.prop("checked"));
-		});
-	});
-// })
-
-
-// chrome.storage.local.get( ['notifyCount'], data => {
-// 	let value = data.notifyCount || 0;
-// 	counter.innerHTML = value;
-// } );
-
-// chrome.storage.onChanged.addListener( ( changes, namespace ) => {
-// 	if ( changes.notifyCount ) {
-// 		let value = changes.notifyCount.newValue || 0;
-// 		counter.innerHTML = value;
-// 	}
-// });
-
-// reset.addEventListener( 'click', () => {
-// 	chrome.storage.local.clear();
-// 	text.value = '';
-// } );
-
-// notify.addEventListener( 'click', () => {
-// 	chrome.runtime.sendMessage( '', {
-// 		type: 'notification',
-// 		message: text.value
-// 	});
-// } );
+// Setting up event handlers for all inputs
+setupInputHandlers($daysInput, "min_days");
+setupInputHandlers($spammersInput, "spammers_hours");
