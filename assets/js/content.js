@@ -22,8 +22,10 @@ const getNameFromMenu = async (art_id)=>{
       await el.click();
     }catch(e){}
     let name = await [...document.querySelector(".overlay.overlay-bottom-sheet.bottom-sheet .modal__content .menu-list a[href*='"+post_id+"']").parentElement.parentElement.querySelectorAll('a')].at(-1).text.split('@')[1];
-    await [...document.querySelectorAll(".overlay.overlay-bottom-sheet.bottom-sheet")].forEach(async element => {
-      await element.click();
+    [...document.querySelectorAll(".overlay.overlay-bottom-sheet.bottom-sheet")].forEach(async element => {
+      try{
+        await element.click();
+      }catch(e){}
     });
     return name;
   }
