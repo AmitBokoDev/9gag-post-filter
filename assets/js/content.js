@@ -101,8 +101,10 @@ const myTimeout = setTimeout(function(){
         }
 
         if(settings.cheers){
-          $("#"+art_id+" a.post-award-btn").hide();
-          $("#"+art_id+" post-award-users").hide();
+          // Hide 'Cheered by' in the post header
+          $('.post-award-users').hide();
+          // Hide Cheers button
+          $('*[data-v-361701b8=""]').hide();
         }
 
         //keep days stuff for last, no unnecessary http requests
