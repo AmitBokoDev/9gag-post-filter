@@ -203,9 +203,11 @@ const myTimeout = setTimeout(function(){
             }                                   
           }
           ////console.log('postId ',post_id," downvotes", downvotes);
-          if(downvotes!== null){
-            $("#"+art_id+" .post-vote").append(`<span class="post-vote__text downvote">${downvotes}</span>`);
-            $("#"+art_id+" .downvote.grouped ").after(`<span class="post-vote__text downvote">${downvotes}</span>`);
+          if(downvotes !== null){
+            const upvote_grouped_data = $(`#${art_id} .upvote.grouped`).data();
+            const data_attr_name = `data-${Object.keys(upvote_grouped_data)[0]}`
+            const new_span = $('<span />').addClass('downvote').attr(data_attr_name,"").html(downvotes);
+            $(`#${art_id} .downvote.grouped`).after(new_span);
           }
           
         }
