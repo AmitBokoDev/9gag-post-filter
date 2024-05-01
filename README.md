@@ -11,10 +11,10 @@ It's a chrome\firefox extension (that also works on android), that lets you filt
 - Mark spammer accounts
 - Show days next to the username on every post
 - Hide users with less than X amount of days
-- Hide anonymous 9GAGGER posts
 - Hide users with blue checkmarks
 - Hide 'Promoted' posts
-- Hide posts by tags or words in the title
+- ~Hide anonymous 9GAGGER posts~ [9gag removed anons]
+- ~Hide posts by tags or words in the title~ [This is now a native option in the settings]
 
 ## How to install
 Chrome: [Download on the Chrome webstore](https://chrome.google.com/webstore/detail/9gag-post-filter/ajkipkkhchaaccpbpkclolpebkgbmodl)\
@@ -49,11 +49,5 @@ Firefox Nightly Android*: [short guide](https://youtu.be/cknXID7rV7k)
 - Buy milk
 
 
-## Feedback
-
+### Feedback 
 Feel free to suggest any changes or improvements to my code
-\
-\
-\
-Meanwhile you should check out [9GAG-Bot-Blocker](https://github.com/paasi6666/Bot-Blocker) by [paasi6666](https://github.com/paasi6666)  which actually activly blocks bot accounts
-
