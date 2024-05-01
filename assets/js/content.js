@@ -156,11 +156,9 @@ async function showDonwvotes(art_id,json){
     }                                   
   }
   ////console.log('postId ',post_id," downvotes", downvotes);
-  if(downvotes !== null){
-    const upvote_grouped_data = $(`#${art_id} .upvote.grouped`).data();
-    const data_attr_name = `data-${Object.keys(upvote_grouped_data)[0]}`
-    const downvote_span = $('<span />').addClass('downvote').attr(data_attr_name,"").html(downvotes);
-    $(`#${art_id} .downvote.grouped`).after(downvote_span);
+  if(downvotes!== null){
+    $("#"+art_id+" .post-vote").append(`<span class="post-vote__text downvote">${downvotes}</span>`);
+    $("#"+art_id+" .downvote.grouped ").after(`<span class="post-vote__text downvote">${downvotes}</span>`);
   }
 }
 
