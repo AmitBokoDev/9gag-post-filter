@@ -10,6 +10,23 @@ chrome.storage.local.get( ['downvotes','show_days',"min_days","verified","promot
 } ); 
 
 
+(function() {
+  const oldFetch = window.fetch;
+
+  window.fetch = function() {
+      return oldFetch.apply(this, arguments)
+          .then(response => {
+              console.debug(response)
+              const clone = response.clone(); // Clone the response to not interfere with the original response stream
+              clone.json() // or clone.json() if you expect JSON
+                  .then(content => {
+                      console.log('Fetch response received:', content);
+                      scanPosts();
+                  });
+              return response;
+          });
+  };
+})();
 
 const getNameFromMenu = async (art_id)=>{
   if(document.querySelector("#"+art_id+" .uikit-popup-menu") !== null){ //desktop
@@ -216,10 +233,13 @@ async function filterArticle(index,thisart){
   }
 
 
+const scanPosts = async ()=>{
+  await $("#list-view-2 article:not(.filtered,.filtering), .list-view__content article:not(.filtered,.filtering)").each(filterArticle);    
+}
 
-const myTimeout = setTimeout(function(){
-  setInterval(async function(){    
-    ////console.log(settings);
-    await $("#list-view-2 article:not(.filtered,.filtering), .list-view__content article:not(.filtered,.filtering)").each(filterArticle);    
-  },500)
-}, 1000);
+// const myTimeout = setTimeout(function(){
+//   setInterval(async function(){    
+//     ////console.log(settings);
+//     await scanPosts();
+//   },500)
+// }, 1000);
