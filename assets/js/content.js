@@ -1,4 +1,6 @@
 var settings;
+var isProfilePage = false;
+var isCommentsPage = false;
 const clickEvent = new MouseEvent("click", {
   "view": window,
   "bubbles": true,
@@ -8,7 +10,6 @@ var k = 0; //numerical id for id-less elements, mostly on mobile browser
 chrome.storage.local.get( ['downvotes','show_days',"min_days","verified","promoted","spammers","spammers_hours","cheers","controls"], data => {
   settings = data;
 } ); 
-
 
 
 const getNameFromMenu = async (art_id)=>{
@@ -71,9 +72,12 @@ async function getUserData(name){
 }
 
 function filterBadges(art_id,thisart){
-  if(
+  if((
     ( document.querySelectorAll("#"+art_id+" .ui-post-creator__badge").length > 0 && settings.verified) || // hide verified
     ($("#"+art_id+" .ui-post-creator__author").hasClass("promoted") && settings.promoted) // hide promoted
+  )
+  && 
+  !isProfilePage
   ){
     //console.log("promoted need to hide ",article);
     thisart.hide();
@@ -90,7 +94,7 @@ function filterAndDisplayDays(art_id,creatorCreation){
   diff = diff/86400; //in days
   diff = parseInt(diff);
   ////console.log(settings.min_days+" ?? "+diff)
-  if(settings.min_days > diff){ //hide users that are too young
+  if(settings.min_days > diff && !isProfilePage){ //hide users that are too young
     //console.log(article,"creator too new");
     $("#"+art_id).hide();
     $("#"+art_id).addClass("filtered");
@@ -129,10 +133,10 @@ async function showSpammer(art_id,json){
     ////console.log('diffset ',diffset);
     if(diffAve < diffset){
       if(document.querySelector("#"+art_id+" .ui-post-creator")!== null)
-      $("#"+art_id+" .ui-post-creator").append(`<span style="color:red;font-weight:bold;">| SPAMMER</span>`);
+      $("#"+art_id+" .ui-post-creator").append(`<span style="color:red;font-weight:bold;line-height:normal;">| SPAMMER</span>`);
       else{
-        $("#"+art_id+" .post-header__left").append(`<span style="color:red;font-weight:bold;">| SPAMMER</span>`);
-        $("#"+art_id+" .post-meta.mobile").append(`<span style="color:red;font-weight:bold;">| SPAMMER</span>`);
+        $("#"+art_id+" .post-header__left").append(`<span style="color:red;font-weight:bold;line-height:normal;">| SPAMMER</span>`);
+        $("#"+art_id+" .post-meta.mobile").append(`<span style="color:red;font-weight:bold;line-height:normal;">| SPAMMER</span>`);
       }
       ////console.log(name+" is a spammer")
     } 
@@ -163,6 +167,7 @@ async function showDonwvotes(art_id,json){
 }
 
 async function filterArticle(index,thisart){
+      console.debug(`Is profile? `,isProfilePage)
       thisart = $(thisart);
 
       // console.log('filtering ', thisart); 
@@ -217,7 +222,9 @@ async function filterArticle(index,thisart){
 
 const myTimeout = setTimeout(function(){
   setInterval(async function(){    
-    ////console.log(settings);
+    isProfilePage = window.location.href.includes("9gag.com/u/");
+    isCommentsPage = window.location.href.includes("9gag.com/gag/");    
+    console.debug(` is comments? `, isCommentsPage)
     await $("#list-view-2 article:not(.filtered,.filtering), .list-view__content article:not(.filtered,.filtering)").each(filterArticle);    
   },500)
 }, 1000);
