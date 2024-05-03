@@ -64,6 +64,9 @@ function setupCheckboxHandlers($checkbox, settingName) {
 
 function setupNumberInputHandlers($input, settingName) {
   $input.on("change", function() {
+    let val = $input.val().trim();
+    if(val === '')
+      val = 0;
     updateChromeStorage(settingName, parseFloat($input.val()));
   });
 }
@@ -100,10 +103,3 @@ setupTextInputHandlers($comNameText, "comName")
 setupTextInputHandlers($comFlagText, "comFlag")
 
 
-// "comDays", "comVerified", "comPro", "comProplus", "comName", "comFlag"
-// var $comMinDaysInput = $("#com_min_days_input");
-// var $comVerifiedCheckbox = $("#com_verified_checkbox");
-// var $comProCheckbox = $("#com_pro_checkbox");
-// var $comProplusCheckbox = $("#com_proplus_checkbox");
-// var $comNameText = $("#com_name_text");
-// var $comFlagText = $("#com_flag_text");
