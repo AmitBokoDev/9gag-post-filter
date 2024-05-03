@@ -237,9 +237,14 @@ async function filterArticle(index,thisart){
 }
 
 
-  const filterCommenter = async () =>{
-
-  }
+const filterCommenter = async (jsonData) =>{
+  let comments = jsonData.payload.comments;
+  console.debug('filterComments',comments);
+  
+  
+  
+  return JSON.parse(JSON.stringify(jsonData)); //avoid pointer problems
+}
 
 const myTimeout = setTimeout(function(){
   setInterval(async function(){    
@@ -251,3 +256,39 @@ const myTimeout = setTimeout(function(){
       ;
   },500)
 }, 1000);
+
+
+(function() {
+  const oldFetch = window.fetch;
+
+  window.fetch = function() {
+      return oldFetch.apply(this, arguments)
+          .then(response => {
+              // Clone the response to create a mutable copy
+              const clone = response.clone();
+
+              // Assume the response is JSON. Adjust this if expecting other formats like text.
+              return clone.json().then(data => {
+                  // Example modification: Add or modify a property in the JSON data
+                  console.debug(arguments)
+                  console.debug(data)
+                  data.newProperty = "This is a new property added by the extension.";
+
+                  // Serialize the modified JSON back into a string
+                  let modifiedData = JSON.parse(JSON.stringify(data)); //avoid pointer problems
+                  modifiedData = filterCommenter(modifiedData)
+
+                  modifiedData = JSON.stringify(data);
+
+                  // Create a new response with the modified JSON data
+                  const newResponse = new Response(modifiedData, {
+                      status: response.status,
+                      statusText: response.statusText,
+                      headers: response.headers
+                  });
+
+                  return newResponse;  // Return the modified response to the original fetch caller
+              });
+          });
+  };
+})();
