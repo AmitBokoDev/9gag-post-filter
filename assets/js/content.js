@@ -157,7 +157,7 @@ async function filterShowDonwvotes(art_id,json,thisart){
   for(let i =0; i<posts.length; i++){
     if(posts[i].id == post_id){
       downvotes = posts[i].downVoteCount;
-      if(settings.ratio && posts[i].upVoteCount*parseFloat(settings.ratioVal) < downvotes && !isProfilePage){       
+      if(settings.ratio && posts[i].upVoteCount*settings.ratioVal < downvotes && !isProfilePage){       
         console.log(`${posts[i].upVoteCount }:${downvotes} ratiod ${settings.ratioVal} need to hide `,thisart);
         thisart.hide();
         thisart.addClass("filtered");

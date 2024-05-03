@@ -42,9 +42,9 @@ function setupCheckboxHandlers($checkbox, settingName) {
   });
 }
 
-function setupInputHandlers($input, settingName) {
+function setupNumberInputHandlers($input, settingName) {
   $input.on("change", function() {
-    updateChromeStorage(settingName, $input.val());
+    updateChromeStorage(settingName, parseFloat($input.val()));
   });
 }
 
@@ -59,6 +59,6 @@ setupCheckboxHandlers($controlsCheckbox, "controls");
 setupCheckboxHandlers($ratioCheckbox, "ratio");
 
 // Setting up event handlers for all inputs
-setupInputHandlers($daysInput, "min_days");
-setupInputHandlers($spammersInput, "spammers_hours");
-setupInputHandlers($ratioValInput, "ratioVal");
+setupNumberInputHandlers($daysInput, "min_days");
+setupNumberInputHandlers($spammersInput, "spammers_hours");
+setupNumberInputHandlers($ratioValInput, "ratioVal");
