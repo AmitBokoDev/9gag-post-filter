@@ -187,54 +187,54 @@ async function hideCheers(thisart){
 }
 
 async function filterArticle(index,thisart){
-      console.debug(`Is profile? `,isProfilePage)
-      thisart = $(thisart);
+  console.debug(`Is profile? `,isProfilePage)
+  thisart = $(thisart);
 
-      // console.log('filtering ', thisart); 
-      thisart.addClass("filtering");
-      if(thisart.attr("id") === undefined){
-        thisart.attr("id","custom-id-"+k);
-        k++;
-      }
-
-      const art_id = thisart.attr("id");
-      const name = await getAndShowName(art_id)
-
-      if(!filterBadges(art_id,thisart)) //early escape for verified or promoted users
-        return;
-
-
-      hideCheers(thisart);
-
-      //keep days stuff for last, no unnecessary http requests
-      if((settings.show_days || settings.min_days > 0) && name != "9GAGGER"){
-        const json = await getUserData(name)
-        if(!json)
-          return;
-        const creatorCreation = json.data.profile.creationTs;
-        //console.log(article,'creator ts',creatorCreation);
-        
-            
-        if(!filterAndDisplayDays(art_id,creatorCreation))
-          return;
-    
-        showSpammer(art_id,json)
-        if(!filterShowDonwvotes(art_id,json,thisart))
-          return;
-        
-      }
-
-      if(settings.controls){
-        try{
-          // console.debug("trying to enable controls for "+art_id,$("#"+art_id+""))
-          $("#"+art_id+" video").prop("controls",true);  //enable controls for videos
-        }catch(e){
-          // console.debug("can't enable controls for "+art_id,e)
-        }
-      }
-        thisart.addClass("filtered");
-
+  // console.log('filtering ', thisart); 
+  thisart.addClass("filtering");
+  if(thisart.attr("id") === undefined){
+    thisart.attr("id","custom-id-"+k);
+    k++;
   }
+
+  const art_id = thisart.attr("id");
+  const name = await getAndShowName(art_id)
+
+  if(!filterBadges(art_id,thisart)) //early escape for verified or promoted users
+    return;
+
+
+  hideCheers(thisart);
+
+  //keep days stuff for last, no unnecessary http requests
+  if((settings.show_days || settings.min_days > 0) && name != "9GAGGER"){
+    const json = await getUserData(name)
+    if(!json)
+      return;
+    const creatorCreation = json.data.profile.creationTs;
+    //console.log(article,'creator ts',creatorCreation);
+    
+        
+    if(!filterAndDisplayDays(art_id,creatorCreation))
+      return;
+
+    showSpammer(art_id,json)
+    if(!filterShowDonwvotes(art_id,json,thisart))
+      return;
+    
+  }
+
+  if(settings.controls){
+    try{
+      // console.debug("trying to enable controls for "+art_id,$("#"+art_id+""))
+      $("#"+art_id+" video").prop("controls",true);  //enable controls for videos
+    }catch(e){
+      // console.debug("can't enable controls for "+art_id,e)
+    }
+  }
+  
+  thisart.addClass("filtered");
+}
 
 
   const filterCommenter = async () =>{
