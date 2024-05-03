@@ -1,5 +1,9 @@
 body {
-    width: 250px;
+    width: 300px;
+}
+
+input[type=number]{
+    width: -webkit-fill-available;
 }
 
 #popup-wrapper {

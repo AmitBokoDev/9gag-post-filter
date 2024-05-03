@@ -8,10 +8,12 @@ var $spammersCheckbox = $("#spammers_checkbox");
 var $spammersInput = $("#spammers_input");
 var $cheersCheckbox = $("#cheers_checkbox");
 var $controlsCheckbox = $("#controls_checkbox");
+var $ratioCheckbox = $("#ratio_checkbox");
+var $ratioValInput = $("#ratioVal_input");
 
 // Loading settings from storage
 chrome.storage.local.get([
-  'downvotes', 'show_days', "min_days", "verified", "promoted", "spammers", "spammers_hours", "cheers", "controls"
+  'downvotes', 'show_days', "min_days", "verified", "promoted", "spammers", "spammers_hours", "cheers", "controls", "ratio", "ratioVal"
 ], data => {
   $downvotesCheckbox.prop('checked', data.downvotes);
   $showDaysCheckbox.prop('checked', data.show_days);
@@ -22,6 +24,8 @@ chrome.storage.local.get([
   $spammersInput.val(data.spammers_hours);
   $cheersCheckbox.prop('checked', data.cheers);
   $controlsCheckbox.prop('checked', data.controls);
+  $ratioCheckbox.prop('checked', data.ratio);  
+  $ratioValInput.val(data.ratioVal);
 });
 
 // Utility function to update Chrome storage
@@ -52,7 +56,9 @@ setupCheckboxHandlers($promotedCheckbox, "promoted");
 setupCheckboxHandlers($spammersCheckbox, "spammers");
 setupCheckboxHandlers($cheersCheckbox, "cheers");
 setupCheckboxHandlers($controlsCheckbox, "controls");
+setupCheckboxHandlers($ratioCheckbox, "ratio");
 
 // Setting up event handlers for all inputs
 setupInputHandlers($daysInput, "min_days");
 setupInputHandlers($spammersInput, "spammers_hours");
+setupInputHandlers($ratioValInput, "ratioVal");

@@ -7,7 +7,7 @@ const clickEvent = new MouseEvent("click", {
   "cancelable": false
 });
 var k = 0; //numerical id for id-less elements, mostly on mobile browser
-chrome.storage.local.get( ['downvotes','show_days',"min_days","verified","promoted","spammers","spammers_hours","cheers","controls"], data => {
+chrome.storage.local.get( ['downvotes', 'show_days', "min_days", "verified", "promoted", "spammers", "spammers_hours", "cheers", "controls", "ratio", "ratioVal"], data => {
   settings = data;
 } ); 
 
@@ -68,6 +68,7 @@ async function getUserData(name){
     "credentials": "include"
   });
   const json = await response.json();
+  console.debug('response json', json)
   return json;
 }
 
@@ -144,9 +145,9 @@ async function showSpammer(art_id,json){
   }
 }
 
-async function showDonwvotes(art_id,json){
+async function filterShowDonwvotes(art_id,json,thisart){
   if(!settings.downvotes)
-    return;
+    return true;
   let post_id = ([...document.querySelectorAll("#"+art_id+" header a")].at(-1)).href.split('/').at(-1)
   // //console.log('post_id',post_id);
   //return the downvotes
@@ -156,6 +157,12 @@ async function showDonwvotes(art_id,json){
   for(let i =0; i<posts.length; i++){
     if(posts[i].id == post_id){
       downvotes = posts[i].downVoteCount;
+      if(settings.ratio && posts[i].upVoteCount*parseFloat(settings.ratioVal) < downvotes && !isProfilePage){       
+        console.log(`${posts[i].upVoteCount }:${downvotes} ratiod ${settings.ratioVal} need to hide `,thisart);
+        thisart.hide();
+        thisart.addClass("filtered");
+        return false;
+      }
       break;
     }                                   
   }
@@ -164,6 +171,7 @@ async function showDonwvotes(art_id,json){
     $("#"+art_id+" .post-vote").append(`<span class="post-vote__text downvote">${downvotes}</span>`);
     $("#"+art_id+" .downvote.grouped ").after(`<span class="post-vote__text downvote">${downvotes}</span>`);
   }
+  return true;
 }
 
 async function filterArticle(index,thisart){
@@ -202,7 +210,8 @@ async function filterArticle(index,thisart){
           return;
     
         showSpammer(art_id,json)
-        showDonwvotes(art_id,json)
+        if(!filterShowDonwvotes(art_id,json,thisart))
+          return;
         
       }
 

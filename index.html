@@ -10,7 +10,8 @@
 		</div>
 		<div id="popup-containers">
 			<div class="popup-form">
-				<h2> Filters </h2>
+				<!-- classic post filters -->
+				<h2> Hide posts </h2>
 				<label for="min_days">Minimum account age</label>
 				<input type="number" name="min_days" id="days_input" placeholder="example: 300">
 				</br>
@@ -19,8 +20,16 @@
 				</br>
 				<label for="promoted">Hide promoted posts</label>
 				<input type="checkbox" name="promoted" id="promoted_checkbox">
-				</br>				
 				</br>
+				<label for="ratioCheck">Hide posts with bad upvote:dnvote ratio</label>
+				<input type="checkbox" name="ratioCheck" id="ratio_checkbox">
+				</br>		
+				<label for="ratioVal">Min ratio of up:dn, '0.8' = 100:80, '0.0' = no dnvotes</label>		
+				<input type="number" name="ratioVal" id="ratioVal_input" min="0" max="100" value="1.0" placeholder="" step=".1">
+				</br>
+				</br>
+
+				<!-- show more info to the user -->
 				<h2>Show Stuff</h2>
 				<label for="downvotes">Display Downvotes</label>
 				<input type="checkbox" name="downvotes" id="downvotes_checkbox" >				
@@ -30,9 +39,13 @@
 				</br>
 				<label for="spammers">Mark spammers</label>
 				<input type="checkbox" name="spammers" id="spammers_checkbox">
-				<input type="number" name="spammers_hours" id="spammers_input" placeholder="average hours between posts">
+				</br>
+				<label for="spammers_hours">Average hours between posts</label>	
+				<input type="number" name="spammers_hours" id="spammers_input" placeholder="" value="12">
 				</br>
 				</br>
+
+				<!-- some good stuff -->
 				<h2>Quality of life</h2>
 				<label for="cheers">Hide cheers</label>
 				<input type="checkbox" name="cheers" id="cheers_checkbox">
