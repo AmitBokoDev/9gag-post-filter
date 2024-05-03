@@ -7,7 +7,10 @@ const clickEvent = new MouseEvent("click", {
   "cancelable": false
 });
 var k = 0; //numerical id for id-less elements, mostly on mobile browser
-chrome.storage.local.get( ['downvotes', 'show_days', "min_days", "verified", "promoted", "spammers", "spammers_hours", "cheers", "controls", "ratio", "ratioVal"], data => {
+chrome.storage.local.get( [
+'downvotes', 'show_days', "min_days", "verified", "promoted", "spammers", "spammers_hours", "cheers", "controls", "ratio", "ratioVal", //posts settings
+"comDays", "comVerified", "comPro", "comProplus", "comName", "comFlag" //commenters settings
+], data => {
   settings = data;
 } ); 
 
@@ -174,6 +177,15 @@ async function filterShowDonwvotes(art_id,json,thisart){
   return true;
 }
 
+async function hideCheers(thisart){
+  if(!settings.cheers)
+    return;
+
+  thisart.find(".post-award-users").hide(); //awards section
+  thisart.find("a.post-award-btn").hide(); //cheer btn on mobile
+  thisart.find('span:contains("Cheers")').closest('ul.btn-vote').hide(); //cheer btn on desktop
+}
+
 async function filterArticle(index,thisart){
       console.debug(`Is profile? `,isProfilePage)
       thisart = $(thisart);
@@ -192,10 +204,7 @@ async function filterArticle(index,thisart){
         return;
 
 
-      if(settings.cheers){
-        $("#"+art_id+" a.post-award-btn").hide();
-        $("#"+art_id+" post-award-users").hide();
-      }
+      hideCheers(thisart);
 
       //keep days stuff for last, no unnecessary http requests
       if((settings.show_days || settings.min_days > 0) && name != "9GAGGER"){
@@ -228,6 +237,9 @@ async function filterArticle(index,thisart){
   }
 
 
+  const filterCommenter = async () =>{
+
+  }
 
 const myTimeout = setTimeout(function(){
   setInterval(async function(){    
@@ -235,5 +247,7 @@ const myTimeout = setTimeout(function(){
     isCommentsPage = window.location.href.includes("9gag.com/gag/");    
     console.debug(` is comments? `, isCommentsPage)
     await $("#list-view-2 article:not(.filtered,.filtering), .list-view__content article:not(.filtered,.filtering)").each(filterArticle);    
+    if(isCommentsPage)
+      ;
   },500)
 }, 1000);
