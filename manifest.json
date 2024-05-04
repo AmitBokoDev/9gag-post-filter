@@ -20,5 +20,12 @@
 		"js": ["assets/js/jquery_slim_mini.js","assets/js/content.js"],
 		"matches": ["https://9gag.com/*"],
 		"content_security_policy": "script-src 'self' 'unsafe-inline'; object-src 'self'"
-	  }]
+	  }],
+	"web_accessible_resources": [
+	{
+		"resources": ["assets/js/injectFetch.js","assets/js/jquery_slim_mini.js"],
+		"matches": ["https://9gag.com/*"]
+	}
+	],
+	"run_at": "document_start"
 }
