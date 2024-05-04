@@ -13,7 +13,7 @@ chrome.storage.local.get( [
 
   
   const scriptElement = document.createElement('script');
-  scriptElement.src = chrome.runtime.getURL('assets/js/injectFetch.js');
+  scriptElement.src = chrome.runtime.getURL('assets/js/injectScript.js');
   (document.head || document.documentElement).appendChild(scriptElement);
 
 })();

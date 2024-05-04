@@ -288,18 +288,6 @@ async function scanArticles(){
     },500)
 }
 
-// const myTimeout = setTimeout(function(){
-//   setInterval(async function(){    
-//     isProfilePage = window.location.href.includes("9gag.com/u/");
-//     isCommentsPage = window.location.href.includes("9gag.com/gag/");    
-//     console.debug(` is comments? `, isCommentsPage)
-//     await $("#list-view-2 article:not(.filtered,.filtering), .list-view__content article:not(.filtered,.filtering)").each(filterArticle);    
-//   },500)
-// }, 1000);
-
 scanArticles();
-
-
-
 
 })();//don't touch
