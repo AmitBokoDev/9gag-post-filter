@@ -1,5 +1,4 @@
-
-(function() {
+(function() {//don't touch
 
 
 
@@ -24,19 +23,10 @@
     
                     // Assume the response is JSON. Adjust this if expecting other formats like text.
                     return clone.json().then(data => {
-                        // Example modification: Add or modify a property in the JSON data
-                        console.debug(arguments)
-                        console.debug(data)
-                        data.newProperty = "This is a new property added by the extension.";
-    
-                        // Serialize the modified JSON back into a string
-                        let modifiedData = JSON.parse(JSON.stringify(data)); //avoid pointer problems
-                        modifiedData = filterComments(modifiedData)
-                        console.debug('modifiedData',modifiedData)
-                        modifiedData = JSON.stringify(data);
-    
+                        scanArticles();
+                        
                         // Create a new response with the modified JSON data
-                        const newResponse = new Response(modifiedData, {
+                        const newResponse = new Response(JSON.stringify(data), {
                             status: response.status,
                             statusText: response.statusText,
                             headers: response.headers
@@ -47,25 +37,6 @@
                 });
         };
     });
-
-
-
-
-function filterComments(data){
-    let comments = data?.payload?.comments;
-    if(!comments)
-        return data;
-
-    console.debug('comment0 test',comments[0])
-    data.payload.comments[0].text = "BIG POOP TEST"
-    data.payload.comments[0].mediaText = "BIG POOP TEST"
-    console.debug('comment0 test2',comments[0],data)
-
-
-    return  JSON.parse(JSON.stringify(data));
-}
-
-
 
 var isProfilePage = false;
 var isCommentsPage = false;
@@ -308,16 +279,27 @@ const filterCommenter = async (jsonData) =>{
   return JSON.parse(JSON.stringify(jsonData)); //avoid pointer problems
 }
 
-const myTimeout = setTimeout(function(){
-  setInterval(async function(){    
+async function scanArticles(){
+    setTimeout(async function(){
     isProfilePage = window.location.href.includes("9gag.com/u/");
     isCommentsPage = window.location.href.includes("9gag.com/gag/");    
     console.debug(` is comments? `, isCommentsPage)
     await $("#list-view-2 article:not(.filtered,.filtering), .list-view__content article:not(.filtered,.filtering)").each(filterArticle);    
-    if(isCommentsPage)
-      ;
-  },500)
-}, 1000);
+    },500)
+}
+
+// const myTimeout = setTimeout(function(){
+//   setInterval(async function(){    
+//     isProfilePage = window.location.href.includes("9gag.com/u/");
+//     isCommentsPage = window.location.href.includes("9gag.com/gag/");    
+//     console.debug(` is comments? `, isCommentsPage)
+//     await $("#list-view-2 article:not(.filtered,.filtering), .list-view__content article:not(.filtered,.filtering)").each(filterArticle);    
+//   },500)
+// }, 1000);
+
+scanArticles();
 
 
-  })();
+
+
+})();//don't touch
