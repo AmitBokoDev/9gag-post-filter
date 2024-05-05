@@ -22,7 +22,16 @@
                     const clone = response.clone();
     
                     // Assume the response is JSON. Adjust this if expecting other formats like text.
-                    return clone.json().then(data => {
+                    return clone.json().then(async data => {
+                        console.debug('req data',data);
+                        // data.payload.comments[0].text = 'big poopoop'
+                        // data.payload.comments[0].mediaText = 'big poopoop'
+                        // data.payload.comments.pop()
+                        // data.payload.comments.pop()
+                        // data.payload.comments.pop()
+                        data = await filterComments(data)
+                        console.debug('req data',data);
+
                         scanArticles();
                         
                         // Create a new response with the modified JSON data
@@ -125,11 +134,15 @@ function filterBadges(art_id,thisart){
 
 }
 
-function filterAndDisplayDays(art_id,creatorCreation){
+function getDiff(creatorCreation){
   const now = Date.now()/1000;
-  let diff = now-creatorCreation;
+  let diff = now-parseInt(creatorCreation);
   diff = diff/86400; //in days
-  diff = parseInt(diff);
+  return parseInt(diff);
+}
+
+function filterAndDisplayDays(art_id,creatorCreation){
+  diff = getDiff(creatorCreation)
   ////console.log(settings.min_days+" ?? "+diff)
   if(settings.min_days > diff && !isProfilePage){ //hide users that are too young
     //console.log(article,"creator too new");
@@ -270,10 +283,15 @@ async function filterArticle(index,thisart){
 }
 
 
-const filterCommenter = async (jsonData) =>{
-  let comments = jsonData.payload.comments;
+const filterComments = async (jsonData) =>{
+  let comments = [...jsonData.payload.comments];
+  let newComments = [];
   console.debug('filterComments',comments);
-  
+  comments.forEach(async (comment) =>{
+    console.debug(comment)
+    const diff = getDiff(comment.user.timestamp)
+    console.debug('diff',diff)
+  })
   
   
   return JSON.parse(JSON.stringify(jsonData)); //avoid pointer problems
