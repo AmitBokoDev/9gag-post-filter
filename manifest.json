@@ -1,24 +1,27 @@
 {
-	"name": "9gag post filter",
-	"description": "A post filter for 9GAG.com",
-	"version": "1.1.6",
-	"browser_specific_settings": {
-		"gecko": {
-		  "id": "amitbokodev@gmail.com",
-		  "strict_min_version": "42.0"
-		}
-	},
-	"manifest_version": 3,
-	"permissions": [
-		"storage"
-	],
-	"action": {
-	  "default_popup": "index.html"
-	},
-	"content_scripts": [{
-		"css": ["assets/css/content.css"],
-		"js": ["assets/js/jquery_slim_mini.js","assets/js/content.js"],
-		"matches": ["https://9gag.com/*"],
-		"content_security_policy": "script-src 'self' 'unsafe-inline'; object-src 'self'"
-	  }]
+  "name": "9gag post filter",
+  "description": "A post filter for 9GAG.com",
+  "version": "1.1.6",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "amitbokodev@gmail.com",
+      "strict_min_version": "42.0"
+    }
+  },
+  "manifest_version": 3,
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "index.html"
+  },
+  "content_scripts": [
+    {
+      "css": ["assets/css/content.css"],
+      "js": ["assets/js/jquery_slim_mini.js", "assets/js/content.js"],
+      "matches": ["https://9gag.com/*"],
+      "content_security_policy": "script-src 'self' 'unsafe-inline'; object-src 'self'"
+    }
+  ],
+  "icons": {
+    "16": "assets/icons/logo.png"
+  }
 }
