@@ -6,13 +6,34 @@ const clickEvent = new MouseEvent("click", {
   "cancelable": false
 });
 var k = 0; //numerical id for id-less elements, mostly on mobile browser
-chrome.storage.local.get( ['show_days',"min_days","anon","verified","promoted","tags","title","spammers","spammers_hours","cheers"], data => {
+chrome.storage.local.get( ['show_days',"min_days","anon","verified","promoted","tags","title","spammers","spammers_hours","cheers", "block"], data => {
   settings = data;
   if(settings.tags !== undefined){
     $tags = settings.tags;
     $tags = $tags.trim().split(",");
   }
 } ); 
+
+let script = document.createElement("script")
+const innerHTML = `
+const blockAccount = async (accountId, art_id) => {
+  const body = "accountId=" + accountId + "&_method=post"
+  const requestInited = {
+    method: 'POST',
+    headers: {
+    "Content-Type" : "application/x-www-form-urlencoded;charset=UTF-8"
+    },
+    body
+  }
+  await fetch("https://9gag.com/v1/user-block", requestInited)
+  let el = document.querySelector("#"+art_id)
+  el.remove()
+}
+`
+script.innerHTML = innerHTML
+$("head").append(script)
+
+
 const getNameFromMenu = async (art_id)=>{
   if(document.querySelector("#"+art_id+" .uikit-popup-menu") !== null){ //desktop
     let el = document.querySelector("#"+art_id+" .uikit-popup-menu");
@@ -131,7 +152,7 @@ const myTimeout = setTimeout(function(){
           //console.log(json);
           let creatorCreation = json.data.profile.creationTs;
           //console.log(article,'creator ts',creatorCreation);
-          
+          const accountId = json.data.profile.accountId
               
           let now = Date.now()/1000;
           let diff = now-creatorCreation;
@@ -205,9 +226,15 @@ const myTimeout = setTimeout(function(){
             $("#"+art_id+" .post-vote").append(`<span class="post-vote__text downvote">${downvotes}</span>`);
             $("#"+art_id+" .downvote.grouped ").after(`<span class="post-vote__text downvote">${downvotes}</span>`);
           }
+
+          if(settings.block){
+            const button = `<button style="color:red;" onClick="blockAccount('${accountId}', '${art_id}')">Block</button>`
+            $("#"+art_id+" .post-header__left").append(button);
+            $("#"+art_id+" .post-meta.mobile").append(button);
+          }
           
         }
-        try{
+        try{         
           console.debug("tring to enable controls for "+art_id,$("#"+art_id+""))
           $("#"+art_id+" video").prop("controls",true);  //enable controls for videos
         }catch(e){
