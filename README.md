@@ -1,3 +1,6 @@
+# THIS PROJECT IS DEAD
+I have given up on 9gag, it gets worse and worse every day, it's just not worth my time to keep working on this project. This extension will stay up on the stores and keep working until it breaks. And when it breaks I will not fix it. 
+
 # 9gag-post-filter
 
 It seems like the devs keep breaking their own app, letting bots and spammers run around unchecked, and refuse to give the community what it wants. I want to try to fix that.
@@ -42,12 +45,12 @@ Firefox Nightly Android*: [short guide](https://youtu.be/cknXID7rV7k)
 7. Any changes to scripts that aren't index.js require refreshing the extension
  To refresh go to chrome://extensions/ and click the refresh button in the extension card (next to the enable switch)
 
-## Plans for the future (maybe idk)
-- move to a system based on interecepting network requests
-- Add dark mode to the popup
-- Make popup look nicer
-- Buy milk
+## ~Plans for the future (maybe idk)~
+- ~move to a system based on interecepting network requests~
+- ~Add dark mode to the popup~
+- ~Make popup look nicer~
+- ~Buy milk~
 
 
-### Feedback 
-Feel free to suggest any changes or improvements to my code
+### ~Feedback~
+~Feel free to suggest any changes or improvements to my code~
