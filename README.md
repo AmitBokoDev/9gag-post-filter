@@ -18,6 +18,7 @@ It's a chrome\firefox extension (that also works on android), that lets you filt
 - Hide 'Promoted' posts
 - ~Hide anonymous 9GAGGER posts~ [9gag removed anons]
 - ~Hide posts by tags or words in the title~ [This is now a native option in the settings]
+- Add button to block account with a single click.
 
 ## How to install
 Chrome: [Download on the Chrome webstore](https://chrome.google.com/webstore/detail/9gag-post-filter/ajkipkkhchaaccpbpkclolpebkgbmodl)\
